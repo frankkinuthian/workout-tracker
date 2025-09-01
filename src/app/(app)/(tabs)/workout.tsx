@@ -1,11 +1,14 @@
 import React from "react";
-import { Text, SafeAreaView } from "react-native";
+import { Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function Workout() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView>
+    <View className="flex-1" style={{ paddingTop: insets.top }}>
       <Text>Workout</Text>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -1,16 +1,12 @@
 import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import {
-  Alert,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProfilePage() {
   const { signOut } = useAuth();
+  const insets = useSafeAreaInsets();
 
   const handleSignOut = () => {
     Alert.alert("Sign Out", "Are you sure you want to sign out?", [
@@ -26,7 +22,7 @@ export default function ProfilePage() {
     ]);
   };
   return (
-    <SafeAreaView className="flex flex-1">
+    <View className="flex flex-1" style={{ paddingTop: insets.top }}>
       <Text>Profile</Text>
 
       {/*Sign out button*/}
@@ -44,6 +40,6 @@ export default function ProfilePage() {
           </View>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

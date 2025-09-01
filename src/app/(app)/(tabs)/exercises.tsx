@@ -1,7 +1,6 @@
 import {
   FlatList,
   RefreshControl,
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -10,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { defineQuery } from "groq";
 import { client } from "@/lib/sanity/client";
 import { Exercise } from "@/lib/sanity/types";
@@ -35,6 +35,7 @@ export default function Exercises() {
   const [filteredExercises, setFilteredExercises] = useState([]);
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
+  const insets = useSafeAreaInsets();
 
   const fetchExercises = async () => {
     try {
@@ -67,7 +68,7 @@ export default function Exercises() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-50" style={{ paddingTop: insets.top }}>
       {/* Header section here */}
 
       <View className="px-6 py-4 bg-white border-b border-gray-200">
@@ -132,6 +133,6 @@ export default function Exercises() {
           </View>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
