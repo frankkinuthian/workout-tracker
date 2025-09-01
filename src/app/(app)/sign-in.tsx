@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   View,
+  Alert,
 } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +25,12 @@ export default function Page() {
   // Handle the submission of the sign-in form
   const onSignInPress = async () => {
     if (!isLoaded) return;
+    if (!emailAddress || !password) {
+      Alert.alert("Error", "Please enter your email and password");
+      return;
+    }
+    
+    setIsLoading(true);
 
     // Start the sign-in process using the email and password provided
     try {
@@ -46,6 +53,8 @@ export default function Page() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -153,7 +162,7 @@ export default function Page() {
 
             {/*Google sign in button */}
             <GoogleSignIn />
-            
+
             {/*Sign-up link */}
             <View className="flex-row justify-center items-center mt-4">
               <Text className="text-gray-600">Don't have an account? </Text>
@@ -164,8 +173,6 @@ export default function Page() {
               </Link>
             </View>
           </View>
-          
-          
 
           {/*Footer section here*/}
           <View className="pb-6">

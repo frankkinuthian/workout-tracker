@@ -51,7 +51,9 @@ export default function Page() {
               return;
             }
 
-            router.push("/");
+            setTimeout(() => {
+              router.replace("/(app)/(tabs)");
+            }, 250);
           },
         });
       } else {

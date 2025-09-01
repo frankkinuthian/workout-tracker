@@ -7,10 +7,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   View,
+  Alert,
 } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -25,6 +27,12 @@ export default function SignUpScreen() {
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
     if (!isLoaded) return;
+
+    if (!emailAddress || !password) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+    setIsLoading(true);
 
     console.log(emailAddress, password);
 
@@ -45,12 +53,21 @@ export default function SignUpScreen() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Handle submission of verification form
   const onVerifyPress = async () => {
     if (!isLoaded) return;
+
+    if (!code) {
+      Alert.alert("Error", "Please enter the verification code");
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       // Use the code the user provided to attempt verification
@@ -72,6 +89,8 @@ export default function SignUpScreen() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsLoading(false);
     }
   };
 
