@@ -20,7 +20,8 @@
     "react": "^19.1",
     "react-dom": "^19.1",
     "sanity": "^4.6.0",
-    "styled-components": "^6.1.18"
+    "styled-components": "^6.1.18",
+    "expo-av": "~15.1.7"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^5.0.2",

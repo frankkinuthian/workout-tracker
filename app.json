@@ -12,7 +12,8 @@
         {
           "origin": "https://n"
         }
-      ]
+      ],
+      "expo-video"
     ],
     "name": "fit-app",
     "slug": "fit-app"
