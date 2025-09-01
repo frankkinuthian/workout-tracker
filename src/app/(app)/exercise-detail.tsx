@@ -66,7 +66,7 @@ export default function ExerciseDetail() {
   // Update player source when exercise changes
   useEffect(() => {
     if (exercise?.videoUrl) {
-      player.replace(exercise.videoUrl);
+      player.replace(exercise?.videoUrl);
     }
   }, [exercise?.videoUrl]);
 
