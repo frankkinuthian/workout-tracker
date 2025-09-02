@@ -24,7 +24,7 @@ import {
 } from "../components/ExerciseCard";
 
 const singleExerciseQuery = defineQuery(
-  `*[_type == "exercise" && _id == $id] [0]`,
+  `*[_type == "exercise" && _id == $id] [0]`
 );
 
 const { width } = Dimensions.get("window");
@@ -41,7 +41,7 @@ export default function ExerciseDetail() {
   }>();
 
   // Initialize video player
-  const player = useVideoPlayer(exercise?.videoUrl || '', (player) => {
+  const player = useVideoPlayer(exercise?.videoUrl || "", (player) => {
     player.loop = true;
     player.muted = false;
   });
@@ -62,6 +62,10 @@ export default function ExerciseDetail() {
 
     fetchExercise();
   }, [id]);
+
+  const getAiGuidance = async () => {
+    
+  }
 
   // Update player source when exercise changes
   useEffect(() => {
@@ -139,7 +143,7 @@ export default function ExerciseDetail() {
               </Text>
               <View
                 className={`self-start px-4 py-2 rounded-full ${getDifficultyColor(
-                  exercise?.difficulty,
+                  exercise?.difficulty
                 )}`}
               >
                 <Text className="text-sm font-semibold text-white">
@@ -195,10 +199,10 @@ export default function ExerciseDetail() {
                     }
                   }}
                 >
-                  <Ionicons 
-                    name={player.playing ? "pause" : "play"} 
-                    size={16} 
-                    color="white" 
+                  <Ionicons
+                    name={player.playing ? "pause" : "play"}
+                    size={16}
+                    color="white"
                   />
                   <Text className="text-white font-medium ml-2">
                     {player.playing ? "Pause" : "Play"}
@@ -251,6 +255,48 @@ export default function ExerciseDetail() {
               </TouchableOpacity>
             </View>
           )}
+
+          {/* AI Guidance section goes here */}
+
+          {/* --------TODO--------- */}
+
+          {/* Action buttons */}
+          <View className="mt-8 gap-2">
+            {/* AI Coach button */}
+            <TouchableOpacity
+              className={`rounded-xl py-4 items-center ${
+                aiLoading
+                  ? "bg-gray-400"
+                  : aiGuidance
+                    ? "bg-green-500"
+                    : "bg-blue-500"
+              }`}
+              onPress={getAiGuidance}
+              disabled={aiLoading}
+            >
+              {aiLoading ? (
+                <View className="flex-row items-center">
+                  <ActivityIndicator size="small" color="white" />
+                  <Text className="text-white font-bold text-lg ml-2">
+                    Loading.....
+                  </Text>
+                </View>
+              ) : (
+                <Text className="text-white font-bold text-lg">
+                  {aiGuidance
+                    ? "Refresh AI Guidance"
+                    : "Get AI Guidance on Form & Technique"}
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="bg-gray-200 rounded-xl py-4 items-center"
+              onPress={() => router.back()}
+            >
+              <Text className="text-gray-800 font-bold text-lg">Close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
