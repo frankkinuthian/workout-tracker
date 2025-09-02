@@ -64,8 +64,35 @@ export default function ExerciseDetail() {
   }, [id]);
 
   const getAiGuidance = async () => {
-    
-  }
+    if (!exercise) return;
+    setAiLoading(true);
+
+    try {
+      const response = await fetch("/api/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          exerciseName: exercise.name,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch AI guidance");
+      }
+
+      const data = await response.json();
+      setAiGuidance(data.message);
+    } catch (error) {
+      console.error("Error fetching AI guidance:", error);
+      setAiGuidance(
+        "Sorry, there was an error getting AI guidance. Please try again."
+      );
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   // Update player source when exercise changes
   useEffect(() => {
