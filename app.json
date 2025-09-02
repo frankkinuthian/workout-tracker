@@ -4,12 +4,13 @@
     "userInterfaceStyle": "automatic",
     "orientation": "default",
     "web": {
-      "output": "static"
+      "output": "server"
     },
     "plugins": [
       [
         "expo-router",
         {
+          // To be changed to deployment URI
           "origin": "https://n"
         }
       ],
