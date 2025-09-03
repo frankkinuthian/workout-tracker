@@ -1,115 +1,288 @@
-## Workout Tracker (Expo + Expo Router + Nativewind)
+# Workout Tracker
 
-A cross‑platform workout tracker built with Expo Router and styled with Nativewind. Content (exercises and workouts) is managed in Sanity. The current scope includes:
+A comprehensive cross-platform fitness application built with modern React Native technologies. Track your workouts, browse exercises with detailed information, and manage your fitness journey with an intuitive interface.
 
-- Browsing exercises with imagery and metadata
-- Viewing detailed exercise information
-- Managing and tracking workouts via tabbed navigation (Home, Exercises, Workout, History, Profile)
-- Authentication scaffolding for user profiles (e.g., sign in/sign up screens)
+![Platform Support](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)
 
-### Tech stack
+## Features
 
-- **Expo** (React Native)
-- **Expo Router** for navigation
-- **Nativewind/Tailwind CSS** for styling
-- **Sanity** as CMS (`sanity/` workspace)
-- **OpenAI** (optional; placeholder API route exists)
+### Core Functionality
+- **Exercise Library**: Browse comprehensive exercise database with imagery and detailed metadata
+- **Workout Management**: Create, track, and manage custom workout routines
+- **Active Workout Mode**: Real-time workout tracking with timer and progress monitoring  
+- **Workout History**: View past workout sessions and track progress over time
+- **User Profiles**: Personal fitness profiles with authentication support
 
-### Getting started
+### User Interface
+- **Tab Navigation**: Intuitive 5-tab interface (Home, Exercises, Workout, History, Profile)
+- **Responsive Design**: Optimized for all screen sizes and orientations
+- **Dark/Light Mode**: Consistent theming across the application
+- **Smooth Animations**: Fluid transitions and micro-interactions
 
-1. Install dependencies
+### Authentication & Security
+- **Clerk Integration**: Secure user authentication and session management
+- **Google Sign-In**: Social authentication support
+- **Secure Storage**: Encrypted local data storage using Expo SecureStore
 
-```sh
+### Media & Content
+- **Rich Media Support**: Exercise videos and images with optimized loading
+- **Markdown Support**: Rich text content rendering for exercise descriptions
+- **Content Management**: Sanity CMS integration for dynamic content updates
+
+## Tech Stack
+
+### Frontend
+- **[Expo](https://expo.dev/)** - React Native development platform
+- **[Expo Router](https://docs.expo.dev/router/introduction/)** - File-based navigation system
+- **[React Native](https://reactnative.dev/)** - Cross-platform mobile framework
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript development
+- **[Nativewind](https://www.nativewind.dev/)** - Tailwind CSS for React Native
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
+
+### Backend & Services
+- **[Sanity](https://www.sanity.io/)** - Headless CMS for content management
+- **[Clerk](https://clerk.com/)** - Authentication and user management
+- **[OpenAI](https://openai.com/)** - AI integration for workout recommendations (optional)
+
+### Development Tools
+- **[PNPM](https://pnpm.io/)** - Fast, disk space efficient package manager
+- **[ESLint](https://eslint.org/)** - Code linting and quality assurance
+- **[TypeScript](https://www.typescriptlang.org/)** - Static type checking
+
+## Project Structure
+
+```
+workout-tracker/
+├── src/
+│   ├── app/                          # Expo Router app directory
+│   │   ├── _layout.tsx                  # Root layout with providers
+│   │   ├── (app)/                    # Authenticated app routes
+│   │   │   ├── _layout.tsx              # App layout with auth guard
+│   │   │   ├── (tabs)/               # Tab-based navigation
+│   │   │   │   ├── _layout.tsx          # Tab layout configuration
+│   │   │   │   ├── index.tsx            # Home tab - Dashboard
+│   │   │   │   ├── exercises.tsx        # Exercises tab - Browse library
+│   │   │   │   ├── workout.tsx          # Workout tab - Create routines
+│   │   │   │   ├── active-workout.tsx   # Active workout session
+│   │   │   │   ├── history/          # Workout history
+│   │   │   │   │   └── index.tsx        # History main page
+│   │   │   │   └── profile/          # User profile
+│   │   │   │       └── index.tsx        # Profile main page
+│   │   │   ├── exercise-detail.tsx      # Exercise detail view
+│   │   │   ├── sign-in.tsx              # Sign in screen
+│   │   │   └── sign-up.tsx              # Sign up screen
+│   │   ├── api/                      # API routes
+│   │   │   └── ai+api.ts                # OpenAI integration
+│   │   └── components/               # Reusable components
+│   │       ├── ExerciseCard.tsx         # Exercise display card
+│   │       └── GoogleSignIn.tsx         # Google auth component
+│   ├── lib/                          # Shared libraries
+│   │   └── sanity/                      # Sanity CMS integration
+│   │       ├── client.ts                # Sanity client configuration
+│   │       └── types.ts                 # Type definitions
+│   └── global.css                       # Global styles
+├── sanity/                          # Sanity CMS workspace
+│   ├── sanity.config.ts                 # Sanity configuration
+│   ├── sanity.types.ts                  # Generated types
+│   └── schemaTypes/                     # Content schemas
+│       ├── exercise.ts                  # Exercise schema
+│       ├── workout.ts                   # Workout schema
+│       └── index.ts                     # Schema exports
+├── Configuration Files
+│   ├── app.json                         # Expo app configuration
+│   ├── babel.config.js                  # Babel transpiler config
+│   ├── metro.config.js                  # Metro bundler config
+│   ├── tailwind.config.js               # Tailwind CSS config
+│   ├── tsconfig.json                    # TypeScript config
+│   └── package.json                     # Dependencies and scripts
+└── Documentation
+    └── README.md                        # This file
+```
+
+## Installation & Setup
+
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **PNPM** (recommended) or npm
+- **Expo CLI** (`npm install -g @expo/cli`)
+- **iOS Simulator** (macOS) or **Android Studio** (for mobile development)
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/workout-tracker.git
+cd workout-tracker
+```
+
+### 2. Install Dependencies
+```bash
+# Using PNPM (recommended)
 pnpm install
-# or npm install
+
+# Or using npm
+npm install
 ```
 
-2. Start the app
+### 3. Environment Configuration
+Create a `.env.local` file in the root directory:
 
-```sh
-npm run start
-# iOS: npm run ios
-# Android: npm run android
-# Web (Expo web): npm run web
+```env
+# Sanity Configuration
+SANITY_PROJECT_ID=your_project_id
+SANITY_DATASET=production
+SANITY_API_TOKEN=your_api_token
+
+# Clerk Authentication
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+
+# Optional: OpenAI Integration
+OPENAI_API_KEY=sk-your_openai_api_key
+
+# Optional: Google Services
+GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
-### Scripts
+### 4. Sanity CMS Setup
+```bash
+# Navigate to sanity directory
+cd sanity
+
+# Install Sanity CLI globally
+npm install -g @sanity/cli
+
+# Login to Sanity
+sanity login
+
+# Deploy schemas
+sanity deploy
+```
+
+### 5. Start Development Server
+```bash
+# Start Expo development server
+pnpm start
+
+# Platform-specific commands
+pnpm run ios      # iOS Simulator
+pnpm run android  # Android Emulator
+pnpm run web      # Web browser
+```
+
+## Usage
+
+### Starting the App
+1. Launch the development server with `pnpm start`
+2. Open the Expo Go app on your device or use a simulator
+3. Scan the QR code or select your platform
+
+### Navigation Structure
+- **Home**: Dashboard with workout summaries and quick actions
+- **Exercises**: Browse exercise library with search and filtering
+- **Workout**: Create custom workout routines and start sessions
+- **History**: View workout history and progress tracking
+- **Profile**: User settings, preferences, and account management
+
+### Key Workflows
+1. **Browse Exercises**: Navigate to Exercises tab → Select exercise for details
+2. **Create Workout**: Go to Workout tab → Add exercises → Save routine
+3. **Track Session**: Start active workout → Log sets/reps → Complete session
+4. **View Progress**: Check History tab for past workouts and analytics
+
+## Configuration
+
+### Customizing Themes
+Modify `tailwind.config.js` to customize colors, fonts, and styling:
+
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#eff6ff',
+          500: '#3b82f6',
+          900: '#1e3a8a',
+        }
+      }
+    }
+  }
+}
+```
+
+### Adding Custom Components
+1. Create component in `src/app/components/`
+2. Export from component file
+3. Import where needed in your screens
+
+### Extending Sanity Schemas
+1. Add new schema file in `sanity/schemaTypes/`
+2. Import in `sanity/schemaTypes/index.ts`
+3. Deploy with `sanity deploy`
+
+## Deployment
+
+### Web Deployment
+```bash
+# Build for web
+npx expo export -p web
+
+# Deploy to EAS Hosting
+npx eas-cli@latest deploy
+```
+
+### Mobile App Builds
+```bash
+# Install EAS CLI
+npm install -g @expo/eas-cli
+
+# Configure builds
+eas build:configure
+
+# Build for iOS/Android
+eas build --platform ios
+eas build --platform android
+
+# Submit to app stores
+eas submit --platform ios
+eas submit --platform android
+```
+
+## Scripts
+
+The following scripts are available in `package.json`:
 
 ```json
 {
   "start": "expo start",
-  "android": "expo start --android",
+  "android": "expo start --android", 
   "ios": "expo start --ios",
-  "web": "expo start --web",
-  "deploy": "npx expo export -p web && npx eas-cli@latest deploy"
+  "web": "expo start --web"
 }
 ```
 
-### Environment variables
+## Environment Variables
 
-- `SANITY_API_TOKEN`: required for any write/mutation operations via the admin client in `src/lib/sanity/client.ts`.
-- `OPENAI_API_KEY` (or `OPEN_AI_KEY`): only needed if you implement the placeholder AI route at `src/app/api/ai+api.ts`.
+### Required Variables
+- `SANITY_API_TOKEN`: Required for any write/mutation operations via the admin client in `src/lib/sanity/client.ts`
+- `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`: Required for Clerk authentication
+
+### Optional Variables  
+- `OPENAI_API_KEY` (or `OPEN_AI_KEY`): Only needed if you implement the placeholder AI route at `src/app/api/ai+api.ts`
+- `GOOGLE_CLIENT_ID`: Required for Google Sign-In functionality
 
 Set them in your shell before running scripts that need them:
 
-```sh
+```bash
 export OPENAI_API_KEY="sk-..."
+export SANITY_API_TOKEN="your_token"
 ```
 
-### Folder structure
+## License
 
-```
-.
-├─ app.json
-├─ babel.config.js
-├─ metro.config.js
-├─ nativewind-env.d.ts
-├─ tailwind.config.js
-├─ tsconfig.json
-├─ src/
-│  ├─ app/
-│  │  ├─ _layout.tsx
-│  │  ├─ (app)/                # App routes via Expo Router
-│  │  │  ├─ _layout.tsx
-│  │  │  ├─ (tabs)/
-│  │  │  │  ├─ _layout.tsx
-│  │  │  │  ├─ index.tsx       # Home tab
-│  │  │  │  ├─ exercises.tsx
-│  │  │  │  ├─ workout.tsx
-│  │  │  │  ├─ history.tsx
-│  │  │  │  └─ profile/
-│  │  │  │     ├─ _layout.tsx
-│  │  │  │     └─ index.tsx
-│  │  │  ├─ exercise-detail.tsx
-│  │  │  ├─ sign-in.tsx
-│  │  │  └─ sign-up.tsx
-│  │  ├─ api/
-│  │  │  └─ ai+api.ts          # Placeholder OpenAI API route
-│  │  └─ components/
-│  │     ├─ ExerciseCard.tsx
-│  │     └─ GoogleSignIn.tsx
-│  ├─ global.css
-│  └─ lib/
-│     └─ sanity/
-│        ├─ client.ts
-│        └─ types.ts
-├─ sanity/                      # Sanity Studio / schema workspace
-│  ├─ sanity.config.ts
-│  ├─ sanity.types.ts
-│  └─ schemaTypes/
-│     ├─ exercise.ts
-│     └─ workout.ts
-└─ README.md
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Sanity
+## Support
 
-- Schemas live in `sanity/schemaTypes/` and content types are generated to `sanity.types.ts`.
-- Configure the Sanity client in `src/lib/sanity/client.ts` (reads `SANITY_API_TOKEN` for admin operations).
-
-### Deploy
-
-Deploy on all platforms with Expo Application Services (EAS).
-
-- Website: `npx eas-cli deploy` — see the EAS Hosting docs.
-- iOS/Android builds: `npx eas-cli build` — see the EAS Build docs.
+- **Issues**: [GitHub Issues](https://github.com/frankkinuthian/workout-tracker/issues)
+---
