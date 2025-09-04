@@ -4,11 +4,14 @@ import {
   StatusBar,
   Platform,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useCallback } from "react";
 import { useStopwatch } from "react-timer-hook";
 
 import { useFocusEffect } from "@react-navigation/native";
+import { useWorkoutStore } from "store/workout-store";
+import { useRouter } from "expo-router";
 
 export default function ActiveWorkout() {
   useFocusEffect(
@@ -22,18 +25,53 @@ export default function ActiveWorkout() {
         StatusBar.setBarStyle("dark-content");
         StatusBar.setBackgroundColor("#FFFFFF");
       };
-    }, []),
+    }, [])
   );
-  
+  const router = useRouter();
+
   //TODO: use Zustand for global state, to persist workout data
+  const {
+    workoutExercises,
+    setWorkoutExercises,
+    resetWorkout,
+    weightUnit,
+    setWeightUnit,
+  } = useWorkoutStore();
 
   //use this hook for timing with offset based on workout start time
   const { seconds, minutes, hours, totalSeconds, reset } = useStopwatch({
     autoStart: true,
   });
 
+  // Reset timer when screen is focused and no active workout/ fresh start
+  useFocusEffect(
+    React.useCallback(() => {
+      // only reset if we have no exercises/ fresh start after ending a workout
+      if (workoutExercises.length > 0) {
+        reset();
+      }
+    }, [workoutExercises.length, reset])
+  );
+
   const getWorkoutDuration = () => {
     return `${minutes.toString().padStart(2, "0")}: ${seconds.toString().padStart(2, "0").toString().padStart(2, "0")}`;
+  };
+
+  const cancelWorkout = () => {
+    Alert.alert(
+      "Cancel Workout",
+      "Are you sure you want to cancel the workout?",
+      [
+        { text: "No", style: "cancel" },
+        {
+          text: "End Workout",
+          onPress: () => {
+            resetWorkout();
+            router.back();
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -58,17 +96,17 @@ export default function ActiveWorkout() {
               {/*Weight unit toggle*/}
               <View className="flex-row bg-gray-700 rounded-lg p-1">
                 <TouchableOpacity
-                  onPress={() => setWeightUnit("kgs")}
+                  onPress={() => setWeightUnit("kg")}
                   className={`px-3 py-1 rounded ${
-                    weightUnit === "kgs" ? "bg-blue-600" : ""
+                    weightUnit === "kg" ? "bg-blue-600" : ""
                   }`}
                 >
                   <Text
                     className={`text-sm font-medium ${
-                      weightUnit === "kgs" ? "text-white" : "text-gray-300"
+                      weightUnit === "kg" ? "text-white" : "text-gray-300"
                     }`}
                   >
-                    kgs
+                    kg
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
