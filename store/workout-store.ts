@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { v4 as uuid } from "uuid";
+
+// Simple ID generator to replace UUID
+const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
 export interface WorkoutSet {
   id: string;
@@ -44,7 +46,7 @@ export const useWorkoutStore = create<WorkoutStore>()(
       addExerciseToWorkout: (exercise) =>
         set((state) => {
           const newExercise: WorkoutExercise = {
-            id: uuid(),
+            id: generateId(),
             sanityId: exercise.sanityId,
             name: exercise.name,
             sets: [],
