@@ -51,6 +51,64 @@ A comprehensive cross-platform fitness application built with modern React Nativ
 - **[ESLint](https://eslint.org/)** - Code linting and quality assurance
 - **[TypeScript](https://www.typescriptlang.org/)** - Static type checking
 
+## State Management
+
+### Zustand Store (`store/workout-store.ts`)
+The app uses **[Zustand](https://github.com/pmndrs/zustand)** for lightweight, type-safe state management with persistence.
+
+#### Key Features
+- **Persistent Storage**: User preferences saved with AsyncStorage
+- **TypeScript Support**: Full type safety with interfaces
+- **UUID Integration**: Reliable unique identifiers for exercises
+- **Immutable Updates**: Safe state mutations with spread operators
+
+#### Store Structure
+```typescript
+interface WorkoutStore {
+  // State
+  workoutExercises: WorkoutExercise[];
+  weightUnit: "kg" | "lbs";
+  
+  // Exercise Management
+  addExerciseToWorkout: (exercise: { name: string; sanityId: string }) => void;
+  setWorkoutExercises: (exercises: WorkoutExercise[] | ((prev: WorkoutExercise[]) => WorkoutExercise[])) => void;
+  resetWorkout: () => void;
+  
+  // Settings
+  setWeightUnit: (unit: "kg" | "lbs") => void;
+}
+```
+
+#### Usage Example
+```typescript
+import { useWorkoutStore } from './store/workout-store';
+
+export const WorkoutScreen = () => {
+  const { 
+    workoutExercises, 
+    weightUnit,
+    addExerciseToWorkout,
+    setWeightUnit 
+  } = useWorkoutStore();
+
+  const handleAddExercise = () => {
+    addExerciseToWorkout({
+      name: "Bench Press",
+      sanityId: "bench-press-123"
+    });
+  };
+
+  const handleWeightUnitChange = () => {
+    setWeightUnit(weightUnit === "kg" ? "lbs" : "kg");
+  };
+};
+```
+
+#### Persistence Strategy
+- **User Preferences**: `weightUnit` is persisted across sessions
+- **Workout Data**: Exercises and sets are session-only (fresh start each time)
+- **Storage**: Uses React Native AsyncStorage for cross-platform persistence
+
 ## Project Structure
 
 ```
@@ -82,6 +140,8 @@ workout-tracker/
 │   │   └── sanity/                      # Sanity CMS integration
 │   │       ├── client.ts                # Sanity client configuration
 │   │       └── types.ts                 # Type definitions
+│   ├── store/                        # State management
+│   │   └── workout-store.ts             # Zustand store with UUID support
 │   └── global.css                       # Global styles
 ├── sanity/                          # Sanity CMS workspace
 │   ├── sanity.config.ts                 # Sanity configuration
@@ -122,6 +182,10 @@ pnpm install
 
 # Or using npm
 npm install
+
+# Install additional UUID package for unique identifiers
+npm install uuid
+npm install --save-dev @types/uuid
 ```
 
 ### 3. Environment Configuration
