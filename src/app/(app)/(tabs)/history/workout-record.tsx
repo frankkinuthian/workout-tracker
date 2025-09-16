@@ -46,7 +46,7 @@ export default function WorkoutRecord() {
   const [deleting, setDeleting] = useState(false);
   const router = useRouter();
   const [workout, setWorkout] = useState<GetWorkoutRecordQueryResult | null>(
-    null,
+    null
   );
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export default function WorkoutRecord() {
           }, acc) || acc
         );
       },
-      { volume: 0, unit: "kgs" },
+      { volume: 0, unit: "kgs" }
     );
 
     return result || { volume: 0, unit: "kgs" };
@@ -139,7 +139,7 @@ export default function WorkoutRecord() {
           style: "destructive",
           onPress: deleteWorkout,
         },
-      ],
+      ]
     );
   };
 
@@ -153,7 +153,7 @@ export default function WorkoutRecord() {
         method: "POST",
         body: JSON.stringify({ workoutId }),
       });
-      router.replace("/(app)/(tabs)/history?refresh=true ");
+      router.replace("/history?refresh=true");
     } catch (error) {
       console.error("Error deleting workout:", error);
       Alert.alert("Error", "Failed to delete workout. Please try again.", [

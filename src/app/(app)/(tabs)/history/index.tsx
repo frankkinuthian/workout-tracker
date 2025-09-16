@@ -78,7 +78,7 @@ export default function HistoryPage() {
       fetchWorkouts();
 
       // Clear refresh param from the URL
-      router.replace("/app/(tabs)/history");
+      router.replace("/history");
     }
   }, [refresh]);
 
@@ -121,10 +121,11 @@ export default function HistoryPage() {
 
   const getExerciseNames = (workout: GetWorkoutsQueryResult[number]) => {
     return (
-      workout.exercises?.map((exercise) => exercise.exercise?.name).filter(Boolean) || []
+      workout.exercises
+        ?.map((exercise) => exercise.exercise?.name)
+        .filter(Boolean) || []
     );
   };
-
 
   if (loading) {
     return (

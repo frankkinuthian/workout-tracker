@@ -10,7 +10,7 @@ function Workout() {
 
   const startWorkout = () => {
     // navigate to active workout screen
-    router.push("/active-workout");
+    router.replace("/active-workout");
   };
 
   return (

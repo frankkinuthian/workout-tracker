@@ -18,9 +18,10 @@ import { useWorkoutStore, WorkoutSet } from "store/workout-store";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ExerciseSelectionModal from "@/app/components/ExerciseSelectionModal";
-import exercise from "sanity/schemaTypes/exercise";
 import { client } from "@/lib/sanity/client";
 import { defineQuery } from "groq";
+import { useUser } from "@clerk/clerk-expo";
+import { WorkoutData } from "@/app/api/save-workout+api";
 
 //Query to find the exercise name:
 const findExerciseQuery =
@@ -41,9 +42,10 @@ export default function ActiveWorkout() {
         StatusBar.setBarStyle("dark-content");
         StatusBar.setBackgroundColor("#FFFFFF");
       };
-    }, []),
+    }, [])
   );
   const router = useRouter();
+  const { user } = useUser();
 
   const [showExerciseSelection, setShowExerciseSelection] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -69,7 +71,7 @@ export default function ActiveWorkout() {
       if (workoutExercises.length > 0) {
         reset();
       }
-    }, [workoutExercises.length, reset]),
+    }, [workoutExercises.length, reset])
   );
 
   // Formats the workout timer display as MM:SS
@@ -85,7 +87,7 @@ export default function ActiveWorkout() {
       // reset the workout
       resetWorkout();
 
-      router.replace("/(app)/(tabs)/history?refresh=true");
+      router.replace("/history?refresh=true");
     }
   };
 
@@ -108,7 +110,7 @@ export default function ActiveWorkout() {
 
           if (!exerciseDoc) {
             throw new Error(
-              `Exercise "${exercise.name}" not found in database`,
+              `Exercise "${exercise.name}" not found in database`
             );
           }
 
@@ -132,8 +134,39 @@ export default function ActiveWorkout() {
             },
             sets: setsForSanity,
           };
-        }),
+        })
       );
+
+      // Filter out exercises w/no completed sets
+      const validExercises = exercisesForSanity.filter(
+        (exercise) => exercise.sets.length > 0
+      );
+
+      if (validExercises.length === 0) {
+        Alert.alert(
+          "No completed sets",
+          "Please complete at least one set before saving the workout."
+        );
+        return false;
+      }
+
+      // Create the workout doc
+      const workoutData: WorkoutData = {
+        _type: "workout",
+        userId: user.id,
+        date: new Date().toISOString(),
+        duration: durationInSeconds,
+        exercises: validExercises,
+      };
+
+      // Save to Sanity API
+      const result = await fetch("/api/save-workout", {
+        method: "POST",
+        body: JSON.stringify({ workoutData }),
+      });
+
+      console.log("Workout saved successfully:", result);
+      return true;
     } catch (error) {
       console.error("Error saving workout:", error);
       Alert.alert("Save Failed", "Failed to save workout. Please try again.");
@@ -160,7 +193,7 @@ export default function ActiveWorkout() {
             await endWorkout();
           },
         },
-      ],
+      ]
     );
   };
 
@@ -175,10 +208,10 @@ export default function ActiveWorkout() {
           text: "End Workout",
           onPress: () => {
             resetWorkout();
-            router.back();
+            router.replace("/history");
           },
         },
-      ],
+      ]
     );
   };
 
@@ -190,7 +223,7 @@ export default function ActiveWorkout() {
   // Removes an exercise from the current workout (not implemented yet)
   const deleteExercise = (exerciseId: string) => {
     setWorkoutExercises((exercises) =>
-      exercises.filter((exercise) => exercise.id !== exerciseId),
+      exercises.filter((exercise) => exercise.id !== exerciseId)
     );
   };
 
@@ -211,8 +244,8 @@ export default function ActiveWorkout() {
               ...exercise,
               sets: [...exercise.sets, newSet],
             }
-          : exercise,
-      ),
+          : exercise
+      )
     );
   };
 
@@ -221,7 +254,7 @@ export default function ActiveWorkout() {
     exerciseId: string,
     setId: string,
     field: "reps" | "weight",
-    value: string,
+    value: string
   ) => {
     setWorkoutExercises((exercises) =>
       exercises.map((exercise) =>
@@ -229,11 +262,11 @@ export default function ActiveWorkout() {
           ? {
               ...exercise,
               sets: exercise.sets.map((set) =>
-                set.id === setId ? { ...set, [field]: value } : set,
+                set.id === setId ? { ...set, [field]: value } : set
               ),
             }
-          : exercise,
-      ),
+          : exercise
+      )
     );
   };
 
@@ -266,11 +299,11 @@ export default function ActiveWorkout() {
               sets: exercise.sets.map((set) =>
                 set.id === setId
                   ? { ...set, isCompleted: !set.isCompleted }
-                  : set,
+                  : set
               ),
             }
-          : exercise,
-      ),
+          : exercise
+      )
     );
   };
 
@@ -545,7 +578,7 @@ export default function ActiveWorkout() {
                 isSaving ||
                 workoutExercises.length === 0 ||
                 workoutExercises.some((exercise) =>
-                  exercise.sets.some((set) => !set.isCompleted),
+                  exercise.sets.some((set) => !set.isCompleted)
                 )
                   ? "bg-gray-400"
                   : "bg-green-600 active:bg-green-700"
@@ -554,7 +587,7 @@ export default function ActiveWorkout() {
                 isSaving ||
                 workoutExercises.length === 0 ||
                 workoutExercises.some((exercise) =>
-                  exercise.sets.some((set) => !set.isCompleted),
+                  exercise.sets.some((set) => !set.isCompleted)
                 )
               }
             >
